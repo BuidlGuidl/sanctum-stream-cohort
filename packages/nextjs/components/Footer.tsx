@@ -2,7 +2,7 @@
  * Site footer
  */
 export const Footer = () => {
-  const codeLink = "https://github.com/BuidlGuidl/starknet-stream-cohort";
+  const codeLink = "https://github.com/BuidlGuidl/sanctum-stream-cohort";
 
   return (
     <div className="min-h-0 p-5 mb-11 lg:mb-0 font-grotesk">

@@ -57,7 +57,7 @@ export const Contributions = ({ withdrawEvents, isLoadingWithdrawEvents }: Contr
                     <strong>Ξ {ethers.utils.formatEther(event.args.amount)}</strong>
                   </div>
                 </div>
-                <div className="w-3/6 text-left text-sm">{event.args.reason}</div>
+                <div className="w-3/6 text-left text-sm  whitespace-normal break-words">{event.args.reason}</div>
               </div>
             </div>
           );

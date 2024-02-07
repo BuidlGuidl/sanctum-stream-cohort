@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import { readContract } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
@@ -8,6 +9,7 @@ import { Contributions } from "~~/components/Contributions";
 import { HackerStreams } from "~~/components/HackerStreams";
 import { StreamContract } from "~~/components/StreamContract";
 import { useScaffoldContractRead, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
+import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 
 type BuilderData = {
   cap: BigNumber;
@@ -26,6 +28,8 @@ const Home: NextPage = () => {
     args: [builderList],
   });
 
+  const { data: streamData } = useDeployedContractInfo("YourContract");
+
   const { data: withdrawEvents, isLoading: isLoadingWithdrawEvents } = useScaffoldEventHistory({
     contractName: "YourContract",
     eventName: "Withdraw",
@@ -42,10 +46,16 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (addBuilderEvents && addBuilderEvents.length > 0) {
       const fetchedBuilderList = addBuilderEvents.map((event: any) => event.args.to);
-      // remove duplicates
       const uniqueBuilderList = [...new Set(fetchedBuilderList)];
-      setBuilderList(uniqueBuilderList);
+      filterBuilders(uniqueBuilderList)
+        .then(filteredBuilders => {
+          setBuilderList(filteredBuilders as string[]);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addBuilderEvents]);
 
   const amIAStreamedBuilder = allBuildersData?.some(
@@ -57,6 +67,37 @@ const Home: NextPage = () => {
   const desc = "A quiet place for special BuidlGuidl builders to create and collaborate.";
 
   const titleImage = "sanctum2.png";
+
+  const isZeroCap = async (address: string) => {
+    if (streamData) {
+      const data = await readContract({
+        address: streamData?.address as string,
+        abi: streamData?.abi,
+        functionName: "streamedBuilders",
+        args: [address],
+      });
+
+      const { cap } = data;
+      if (cap !== undefined && Number(cap) > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  isZeroCap("0xDcd5f58Ed05ed34A4c0a99F34029Bd8313f5D529");
+
+  const filterBuilders = async (builderList: string[]) => {
+    const filteredBuilders = await Promise.all(
+      builderList.map(async address => {
+        if (await isZeroCap(address)) {
+          return address;
+        }
+      }),
+    );
+    return filteredBuilders.filter(Boolean);
+  };
 
   return (
     <>
