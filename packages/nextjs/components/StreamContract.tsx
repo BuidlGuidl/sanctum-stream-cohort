@@ -77,13 +77,13 @@ export const StreamContract = ({ amIAStreamedBuilder }: StreamContractProps) => 
             <div className="flex flex-col gap-6 items-center">
               <input
                 type="text"
-                className="input input-ghost focus:outline-none focus:bg-transparent focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 w-full font-medium placeholder:text-accent/50 text-gray-400 border-2 border-base-300 bg-base-200 rounded-full text-accent"
+                className="input input-ghost focus:outline-none focus:bg-transparent focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 w-full font-medium placeholder:text-accent/50  border-2 border-base-300 bg-base-200 rounded-full text-accent"
                 placeholder="Reason for withdrawing and link to github plz"
                 value={reason}
                 onChange={event => setReason(event.target.value)}
               />
               <EtherInput value={amount} onChange={value => setAmount(value)} />
-              <button className="btn btn-primary btn-sm" onClick={doWithdraw}>
+              <button className="btn btn-primary btn-sm" onClick={() => doWithdraw()}>
                 Confirm Withdrawal
               </button>
             </div>
