@@ -86,8 +86,6 @@ const Home: NextPage = () => {
     }
   };
 
-  isZeroCap("0xDcd5f58Ed05ed34A4c0a99F34029Bd8313f5D529");
-
   const filterBuilders = async (builderList: string[]) => {
     const filteredBuilders = await Promise.all(
       builderList.map(async address => {
