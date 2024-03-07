@@ -31,7 +31,7 @@ export const StreamContract = ({ amIAStreamedBuilder }: StreamContractProps) => 
   const { writeAsync: doWithdraw } = useScaffoldContractWrite({
     contractName: "YourContract",
     functionName: "streamWithdraw",
-    args: [ethers.utils.parseEther(amount || "0"), reason],
+    args: [ethers.utils.parseEther(Number(amount).toFixed(18) || "0"), reason],
   });
 
   return (
